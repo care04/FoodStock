@@ -1,27 +1,99 @@
 <script setup lang="ts">
-import {onBeforeMount} from "vue"
+import {onMounted, onBeforeMount, ref, type Ref, computed, toRef} from "vue"
 import { useFoodStore } from "../stores/foodStore"
 import { useRoute } from "vue-router"
-// import { storeToRefs } from 'pinia';
-
+import type { Food } from "../types/FoodStockTypes"
+import { storeToRefs } from 'pinia';
 var foodStore = useFoodStore()
-onBeforeMount(()=> {
+let { currentRoom } = storeToRefs(foodStore)
+var New = false
+var unitId = ref(0)
+var storageId = ref(0)
+function save () {
+  if(New === false) {
+    foodStore.updateFood(selectedFood.value, unitId.value)
+  } else {
+    foodStore.createFood(selectedFood.value, storageId.value, unitId.value)
+  }
+  selectedFood.value = foodStore.emptyFoodItem as Food
+}
+function close () {
+  selectedFood.value = foodStore.emptyFoodItem as Food
+}
+function callModal(fi: Food) {
+  selectedFood.value = fi
+  unitId.value = fi.unit[0].id
+}
+async function setRoom(room:any) {
+  currentRoom.value = room // this is not typical for inside a computed method so moved to external method
+}
+var selectedFood: Ref<Food> = ref(foodStore.emptyFoodItem)
+
+const storeRoom = computed(() => {
+  foodStore.getStuff()
   foodStore.getFood() 
   var route = useRoute()
-  var room = foodStore.rooms.filter((area) => {
+  let room = foodStore.rooms.filter((area) => {
     return (area.value === route.params.areaValue)
-  })
-  foodStore.currentRoom = room[0]
+  })[0]
+  setRoom(room)
+  return room
 })
 </script>
 <template>
   <div class="about">
-    <h1>{{foodStore.currentRoom.value}}</h1>
+    <h1>{{ storeRoom?.value }}</h1>
+    <h3 v-if="foodStore.error != ''">Error: {{ foodStore.error }}</h3>
     <ul>
       <li v-for="fi in foodStore.areaFood" :key="fi.id">
-        <button>{{ fi.foodName }}</button>
+        <button class="btn" onclick="my_modal_4.showModal()" @click="callModal(fi)">{{ fi.foodName }}</button>
       </li>
     </ul>
+    <dialog id="my_modal_4" class="modal">
+      <div class="modal-box w-11/12 max-w-5xl">
+        <h3 v-if="New">New Food</h3><button onclick="my_modal_4.close()" @click="close()">x</button>
+        <h3 class="font-bold text-lg" v-if="!New">{{ selectedFood.foodName}}</h3>
+        <div class="form-control w-half max-w-xs" v-if="New">
+          <label class="label">
+            <span class="label-text">Name</span>
+          </label>
+          <input type="text" placeholder="Food Name" class="input input-bordered w-full max-w-xs" v-model="selectedFood.foodName"/>
+        </div>
+        <div class="form-control w-half max-w-xs">
+          <label class="label">
+            <span class="label-text">Amount To Keep</span>
+          </label>
+          <input type="number" placeholder="Amount To Keep" class="input input-bordered w-full max-w-xs" v-model="selectedFood.amountToKeep"/>
+        </div>
+        <div class="form-control w-half max-w-xs">
+          <label class="label">
+            <span class="label-text">Unit</span>
+          </label>
+          <select class="select select-bordered" v-model="unitId">
+            <option disabled selected value="">Pick Unit ({{ unitId }})</option>
+            <option v-for="unit in foodStore.Units" :key="unit.id" :value="unit.id">{{ unit.value }}</option>
+          </select>
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">Owned</span>
+          </label>
+          <input type="number" placeholder="Owned" class="input input-bordered w-full max-w-xs" v-model="selectedFood.stock" />
+        </div>
+        <div class="form-control w-full max-w-xs">
+          <label class="label">
+            <span class="label-text">Need To Get</span>
+          </label>
+          <input type="number" placeholder="Need To Get" class="input input-bordered w-full max-w-xs" v-model="selectedFood.need"/>
+        </div>
+        <div class="modal-action">
+          <form method="dialog">
+            <button class="btn" @click="save()">Save</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+    <button class="btn" onclick="my_modal_4.showModal()" @click="New = true">+</button>
   </div>
 </template>
 

@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { onBeforeMount } from "vue";
 import { useFoodStore } from "../stores/foodStore"
 var foodStore = useFoodStore()
-var rooms = foodStore.rooms
+// await foodStore.getStuff()
+onBeforeMount(()=> {
+  foodStore.getStuff()
+})
 </script>
 
 <template>
@@ -9,7 +13,7 @@ var rooms = foodStore.rooms
     <h2>
       <RouterLink v-for="
       // @ts-ignore
-      areas in rooms" 
+      areas in foodStore.rooms" 
       :key="areas.id" :to="{name: 'area', params: {areaValue: areas.value} }">
         {{areas.value}}<br/>
       </RouterLink>
