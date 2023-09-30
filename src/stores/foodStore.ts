@@ -25,13 +25,14 @@ export const useFoodStore = defineStore("food", {
       order: 0,
       stock: 0,
     },
-    error: ""
+    error: "",
+    groceryList: []
   }),
   actions: {
     async getFood() {
       await axios({
         method: "GET",
-        url: "http://10.0.0.6/api/database/rows/table/719/?user_field_names=true&exclude=groceryList",
+        url: "http://baserow.sosensible.net/api/database/rows/table/719/?user_field_names=true&exclude=groceryList",
         headers: {
           Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j"
         }
@@ -42,7 +43,7 @@ export const useFoodStore = defineStore("food", {
     async getStuff() {
       axios({
         method: "GET",
-        url: "http://10.0.0.6/api/database/fields/table/719/",
+        url: "http://baserow.sosensible.net/api/database/fields/table/719/",
         headers: {
           Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
         }
@@ -54,7 +55,7 @@ export const useFoodStore = defineStore("food", {
     async updateFood(selectedFood: Food, unitId: number) {
       await axios({
         method: "PATCH",
-        url: "http://10.0.0.6/api/database/rows/table/719/" + selectedFood.id + "/?user_field_names=true",
+        url: "http://baserow.sosensible.net/api/database/rows/table/719/" + selectedFood.id + "/?user_field_names=true",
         headers: {
           Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
           "Content-Type": "application/json"
@@ -73,25 +74,36 @@ export const useFoodStore = defineStore("food", {
     },
     async createFood(selectedFood: Food, storageId: number, unitId: number) {
       await axios({
-        method: "Post",
-        url: "http://10.0.0.6/api/database/rows/table/719/?user_field_names=true",
+        method: "POST",
+        url: "http://baserow.sosensible.net/api/database/rows/table/719/?user_field_names=true",
         headers: {
           Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
           "Content-Type": "application/json"
         },
         data: {
-          unit: [+unitId], 
+          foodName: selectedFood.foodName,
           amountToKeep: +selectedFood.amountToKeep,
           stock: +selectedFood.stock,
           need: +selectedFood.need,
-          foodStoragePlace: [+storageId],
-          foodName: selectedFood.foodName,
+          foodStoragePlace: [storageId],
+          unit: [unitId], 
         }
-      }).then(() => {
-        this.error = ""
+      }).then((results) => {
+        console.log(results) 
+        
       }).catch((error) => {
-        console.log(error)
         this.error = error.message
+      })
+    },
+    async getGroceryList(){
+      axios({
+        method: "GET",
+        url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
+        headers: {
+          Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j"
+        }
+      }).then((response) => {
+        console.log(response.data.results)
       })
     }
   },

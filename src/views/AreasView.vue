@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, onBeforeMount, ref, type Ref, computed, toRef} from "vue"
+import {ref, type Ref, computed} from "vue"
 import { useFoodStore } from "../stores/foodStore"
 import { useRoute } from "vue-router"
 import type { Food } from "../types/FoodStockTypes"
@@ -8,14 +8,15 @@ var foodStore = useFoodStore()
 let { currentRoom } = storeToRefs(foodStore)
 var New = false
 var unitId = ref(0)
-var storageId = ref(0)
 function save () {
   if(New === false) {
     foodStore.updateFood(selectedFood.value, unitId.value)
   } else {
-    foodStore.createFood(selectedFood.value, storageId.value, unitId.value)
+    foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
+    close()
   }
-  selectedFood.value = foodStore.emptyFoodItem as Food
+  close()
+  console.log("Empty Food Object", foodStore.emptyFoodItem)
 }
 function close () {
   selectedFood.value = foodStore.emptyFoodItem as Food

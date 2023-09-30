@@ -5,6 +5,7 @@ var foodStore = useFoodStore()
 // await foodStore.getStuff()
 onBeforeMount(()=> {
   foodStore.getStuff()
+  foodStore.getGroceryList()
 })
 </script>
 

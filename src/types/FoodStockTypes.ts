@@ -9,11 +9,16 @@ export interface Food {
   stock: Number,
 }
 export interface GroceryList {
-  food: string,
-  amountNeeded: number
+  Food:[groceryFood]
+  amount: Number
+  id: Number
+  order: Number
 }
 
-
+export interface groceryFood {
+  id: Number,
+  value: String
+}
 export interface foodStoragePlace {
   color: string,
   id: number,
