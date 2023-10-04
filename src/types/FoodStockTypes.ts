@@ -14,7 +14,6 @@ export interface GroceryList {
   id: Number
   order: Number
 }
-
 export interface groceryFood {
   id: Number,
   value: String

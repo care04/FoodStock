@@ -103,7 +103,12 @@ export const useFoodStore = defineStore("food", {
           Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j"
         }
       }).then((response) => {
-        console.log(response.data.results)
+        this.groceryList = response.data.results
+        const list = []
+        this.groceryList.array.forEach(element => {
+          list.append({name: element.food.value, amount: element.amount})
+        });
+        console.log(list)
       })
     }
   },
@@ -113,6 +118,9 @@ export const useFoodStore = defineStore("food", {
         return state.currentRoom?.id === food.foodStoragePlace[0].id
       })
     },
+    GroceryList(state) {
+      return state.groceryList
+    }
   }
 })
 if (import.meta.hot) {

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue';
 import AreaView from '../views/AreasView.vue';
+import ListView from '../views/ListView.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,6 +15,11 @@ const router = createRouter({
       path: '/:areaValue',
       name: 'area',
       component: AreaView
+    },
+    {
+      path: '/list',
+      name: 'list',
+      component: ListView
     }
   ]
 })
