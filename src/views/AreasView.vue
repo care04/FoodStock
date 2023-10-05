@@ -18,6 +18,9 @@ function save () {
     foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
     close()
   }
+  if (+selectedFood.value.need > 0) {
+    addToList()
+  }
   close()
   console.log("Empty Food Object", foodStore.emptyFoodItem)
 }
