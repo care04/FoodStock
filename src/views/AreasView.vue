@@ -39,6 +39,9 @@ var selectedFood: Ref<Food> = ref(foodStore.emptyFoodItem)
 
 var need = computed(() => {
   var toGet =  +selectedFood.value.amountToKeep - +selectedFood.value.stock
+  if (toGet < 0 ) {
+    toGet = 0
+  }
   console.log(toGet)
   return toGet
 })
@@ -100,9 +103,6 @@ const storeRoom = computed(() => {
           <input type="number" placeholder="Need To Get" class="input input-bordered w-full max-w-xs" v-model="need"/>
         </div>
         <div class="modal-action">
-          <form method="dialog">
-            <button class="btn" @click="addToList()">add to list</button>
-          </form>
           <form method="dialog">
             <button class="btn" @click="save()">Save</button>
           </form>
