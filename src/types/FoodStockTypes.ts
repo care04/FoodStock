@@ -1,8 +1,8 @@
 export interface Food {
   amountToKeep: Number,
   foodName: String,
-  foodStoragePlace: foodStoragePlace[],
-  unit: foodStoragePlace[],
+  foodStoragePlace: foodStoragePlace,
+  unit: foodStoragePlace,
   id: Number,
   need: Number,
   order: Number,

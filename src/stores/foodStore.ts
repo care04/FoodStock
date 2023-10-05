@@ -61,7 +61,7 @@ export const useFoodStore = defineStore("food", {
           "Content-Type": "application/json"
         },
         data: {
-          unit: [unitId],
+          unit: unitId,
           amountToKeep: +selectedFood.amountToKeep,
           stock: +selectedFood.stock,
           need: +selectedFood.need,
@@ -85,8 +85,8 @@ export const useFoodStore = defineStore("food", {
           amountToKeep: +selectedFood.amountToKeep,
           stock: +selectedFood.stock,
           need: +selectedFood.need,
-          foodStoragePlace: [storageId],
-          unit: [unitId], 
+          foodStoragePlace: storageId,
+          unit: unitId, 
         }
       }).then((results) => {
         console.log(results) 
@@ -96,7 +96,7 @@ export const useFoodStore = defineStore("food", {
       })
     },
     async getGroceryList(){
-      axios({
+      await axios({
         method: "GET",
         url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
         headers: {
@@ -110,12 +110,28 @@ export const useFoodStore = defineStore("food", {
         });
         console.log(list)
       })
+    },
+    async createGroceryList(selectedFood: Food){
+      await axios({
+        method: "POST",
+        url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
+        headers: {
+          Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
+          "Content-Type": "application/json"
+        },
+        data: {
+          amount: selectedFood.need,
+          Food: [
+              selectedFood.id
+          ]
+        }
+      })
     }
   },
   getters: {
     areaFood(state) {
       return state.food.filter( food => {
-        return state.currentRoom?.id === food.foodStoragePlace[0].id
+        return state.currentRoom?.id === food.foodStoragePlace.id
       })
     },
     GroceryList(state) {

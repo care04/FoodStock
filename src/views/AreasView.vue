@@ -8,6 +8,9 @@ var foodStore = useFoodStore()
 let { currentRoom } = storeToRefs(foodStore)
 var New = false
 var unitId = ref(0)
+function addToList() {
+   foodStore.createGroceryList(selectedFood.value)
+}
 function save () {
   if(New === false) {
     foodStore.updateFood(selectedFood.value, unitId.value)
@@ -23,7 +26,7 @@ function close () {
 }
 function callModal(fi: Food) {
   selectedFood.value = fi
-  unitId.value = fi.unit[0].id
+  unitId.value = fi.unit.id
 }
 async function setRoom(room:any) {
   currentRoom.value = room // this is not typical for inside a computed method so moved to external method
@@ -88,6 +91,9 @@ const storeRoom = computed(() => {
           <input type="number" placeholder="Need To Get" class="input input-bordered w-full max-w-xs" v-model="selectedFood.need"/>
         </div>
         <div class="modal-action">
+          <form method="dialog">
+            <button class="btn" @click="addToList()">add to list</button>
+          </form>
           <form method="dialog">
             <button class="btn" @click="save()">Save</button>
           </form>
