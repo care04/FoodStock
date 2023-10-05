@@ -126,6 +126,17 @@ export const useFoodStore = defineStore("food", {
           ]
         }
       })
+    },
+    async deleteListItem(id: number) {
+      await axios({
+        method: "DELETE",
+        url: "http://baserow.sosensible.net/api/database/rows/table/724/"+id+"/",
+        headers: {
+          Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j"
+        }
+      }).then(() => {
+        this.getGroceryList()
+      })
     }
   },
   getters: {
