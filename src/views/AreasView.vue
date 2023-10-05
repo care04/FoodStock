@@ -12,6 +12,7 @@ function addToList() {
    foodStore.createGroceryList(selectedFood.value)
 }
 function save () {
+  selectedFood.value.need = need.value
   if(New === false) {
     foodStore.updateFood(selectedFood.value, unitId.value)
   } else {
@@ -36,6 +37,11 @@ async function setRoom(room:any) {
 }
 var selectedFood: Ref<Food> = ref(foodStore.emptyFoodItem)
 
+var need = computed(() => {
+  var toGet =  +selectedFood.value.amountToKeep - +selectedFood.value.stock
+  console.log(toGet)
+  return toGet
+})
 const storeRoom = computed(() => {
   foodStore.getStuff()
   foodStore.getFood() 
@@ -85,13 +91,13 @@ const storeRoom = computed(() => {
           <label class="label">
             <span class="label-text">Owned</span>
           </label>
-          <input type="number" placeholder="Owned" class="input input-bordered w-full max-w-xs" v-model="selectedFood.stock" />
+          <input type="number" placeholder="Owned" class="input input-bordered w-full max-w-xs" v-model="selectedFood.stock"/>
         </div>
         <div class="form-control w-full max-w-xs">
           <label class="label">
             <span class="label-text">Need To Get</span>
           </label>
-          <input type="number" placeholder="Need To Get" class="input input-bordered w-full max-w-xs" v-model="selectedFood.need"/>
+          <input type="number" placeholder="Need To Get" class="input input-bordered w-full max-w-xs" v-model="need"/>
         </div>
         <div class="modal-action">
           <form method="dialog">
