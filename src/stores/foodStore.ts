@@ -104,22 +104,41 @@ export const useFoodStore = defineStore("food", {
         this.groceryList = response.data.results
       })
     },
-    async createGroceryList(selectedFood: Food){
-      await axios({
-        method: "POST",
-        url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
-        headers: {
-          Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
-          "Content-Type": "application/json"
-        },
-        data: {
-          amount: selectedFood.need,
-          Unit: selectedFood.unit.value,
-          Food: [
-              selectedFood.id
-          ]
+    checkCopy() {
+      this.GroceryList.filter((item) => {
+        if(item.Food[0].value === selectedFood.foodName){
+          //
+        }else {
+          //
         }
       })
+    },
+    async createGroceryList(selectedFood: Food){
+      let checkCopy = ""
+      this.GroceryList.filter((item) => {
+        if(item.Food[0].value === selectedFood.foodName){
+          checkCopy = "don't create"
+        }
+      })
+      if (checkCopy === "go ahead") {
+        await axios({
+          method: "POST",
+          url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
+          headers: {
+            Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
+            "Content-Type": "application/json"
+          },
+          data: {
+            amount: selectedFood.need,
+            Unit: selectedFood.unit.value,
+            Food: [
+                selectedFood.id
+            ]
+          }
+        })
+      } else {
+        console.log("already in list")
+      }
     },
     deleteAreaItemFromList(foodName: String){
       this.getGroceryList()
