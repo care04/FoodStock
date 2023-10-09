@@ -15,7 +15,7 @@ onBeforeMount(() => {
     <ul>
       <li v-for="food in foodStore.groceryList" :key="food.id">
       <button class="btn" @click="deleteItem(food.id)">x</button>
-        {{ "    " + food.amount + " "}}{{ food.Food[0].value }}
+        {{ "    " + food.amount + " "}}{{ food.Unit + " " }}{{ food.Food[0].value }}
       </li>
     </ul>
   </main>

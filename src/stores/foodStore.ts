@@ -114,6 +114,7 @@ export const useFoodStore = defineStore("food", {
         },
         data: {
           amount: selectedFood.need,
+          Unit: selectedFood.unit.value,
           Food: [
               selectedFood.id
           ]
