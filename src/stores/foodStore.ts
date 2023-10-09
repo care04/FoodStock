@@ -10,16 +10,16 @@ export const useFoodStore = defineStore("food", {
     emptyFoodItem: {
       amountToKeep: 0,
       foodName: "",
-      foodStoragePlace: [{
+      foodStoragePlace: {
         color: "",
         id: 0,
         value: ""
-      }],
-      unit: [{
+      },
+      unit: {
         color: "",
         id: 0,
         value: ""
-      }],
+      },
       id: 0,
       need: 0,
       order: 0,
@@ -66,8 +66,6 @@ export const useFoodStore = defineStore("food", {
           stock: +selectedFood.stock,
           need: +selectedFood.need,
         }
-      }).then((response) => {
-        console.log(response.data.results)
       }).catch((error) => {
         console.log(error)
       })
@@ -104,11 +102,6 @@ export const useFoodStore = defineStore("food", {
         }
       }).then((response) => {
         this.groceryList = response.data.results
-        const list = []
-        this.groceryList.array.forEach(element => {
-          list.append({name: element.food.value, amount: element.amount})
-        });
-        console.log(list)
       })
     },
     async createGroceryList(selectedFood: Food){
@@ -125,6 +118,15 @@ export const useFoodStore = defineStore("food", {
               selectedFood.id
           ]
         }
+      })
+    },
+    deleteAreaItemFromList(foodName: String){
+      this.getGroceryList()
+      this.GroceryList.filter((item) => {
+        if(item.Food[0].value === foodName) {
+          this.deleteListItem(item.id)
+        }
+        return (item)
       })
     },
     async deleteListItem(id: number) {
@@ -147,6 +149,13 @@ export const useFoodStore = defineStore("food", {
     },
     GroceryList(state) {
       return state.groceryList
+    },
+    listItemToRemove(state) {
+      return state.groceryList.filter(item => {
+        if (item.Food[0].id === 0) {
+          return item.id
+        }
+      })
     }
   }
 })

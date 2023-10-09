@@ -15,15 +15,17 @@ function save () {
   selectedFood.value.need = need.value
   if(New === false) {
     foodStore.updateFood(selectedFood.value, unitId.value)
+    if (selectedFood.value.need === 0) {
+      foodStore.getGroceryList()
+      foodStore.deleteAreaItemFromList(selectedFood.value.foodName)
+    }
   } else {
     foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
-    close()
   }
   if (+selectedFood.value.need > 0) {
     addToList()
+    close()
   }
-  close()
-  console.log("Empty Food Object", foodStore.emptyFoodItem)
 }
 function close () {
   selectedFood.value = foodStore.emptyFoodItem as Food
@@ -42,7 +44,6 @@ var need = computed(() => {
   if (toGet < 0 ) {
     toGet = 0
   }
-  console.log(toGet)
   return toGet
 })
 const storeRoom = computed(() => {
@@ -55,6 +56,27 @@ const storeRoom = computed(() => {
   setRoom(room)
   return room
 })
+function create() {
+  New = true
+  selectedFood.value = {
+      amountToKeep: 0,
+      foodName: "",
+      foodStoragePlace: {
+        color: "",
+        id: 0,
+        value: ""
+      },
+      unit: {
+        color: "",
+        id: 0,
+        value: ""
+      },
+      id: 0,
+      need: 0,
+      order: 0,
+      stock: 0,
+    }
+}
 </script>
 <template>
   <div class="about">
@@ -109,7 +131,7 @@ const storeRoom = computed(() => {
         </div>
       </div>
     </dialog>
-    <button class="btn" onclick="my_modal_4.showModal()" @click="New = true">+</button>
+    <button class="btn" onclick="my_modal_4.showModal()" @click="create()">+</button>
   </div>
 </template>
 
