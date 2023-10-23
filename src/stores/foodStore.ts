@@ -104,25 +104,18 @@ export const useFoodStore = defineStore("food", {
         this.groceryList = response.data.results
       })
     },
-    checkCopy() {
-      this.GroceryList.filter((item) => {
-        if(item.Food[0].value === selectedFood.foodName){
-          //
-        }else {
-          //
-        }
-      })
-    },
     async createGroceryList(selectedFood: Food){
-      let checkCopy = ""
+      let checkCopy = "go ahead"
       this.getGroceryList()
       this.GroceryList.filter(item => {
+        console.log(item)
         if(item.Food[0].value === selectedFood.foodName){
           checkCopy = "don't create"
         } else {
           checkCopy = "go ahead"
         }
       })
+      console.log(checkCopy, this.GroceryList)
       if (checkCopy === "go ahead") {
         await axios({
           method: "POST",
