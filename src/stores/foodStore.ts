@@ -87,9 +87,8 @@ export const useFoodStore = defineStore("food", {
           unit: unitId, 
         }
       }).then((results) => {
-        console.log(results) 
         this.getFood()
-        
+        this.createGroceryList(results.data)
       }).catch((error) => {
         this.error = error.message
       })
