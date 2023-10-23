@@ -108,14 +108,11 @@ export const useFoodStore = defineStore("food", {
       let checkCopy = "go ahead"
       this.getGroceryList()
       this.GroceryList.filter(item => {
-        console.log(item)
+        console.log(item.Food[0].value === selectedFood.foodName)
         if(item.Food[0].value === selectedFood.foodName){
           checkCopy = "don't create"
-        } else {
-          checkCopy = "go ahead"
         }
       })
-      console.log(checkCopy, this.GroceryList)
       if (checkCopy === "go ahead") {
         await axios({
           method: "POST",
@@ -131,9 +128,12 @@ export const useFoodStore = defineStore("food", {
                 selectedFood.id
             ]
           }
+        }).then(() => {
+          this.getGroceryList()
+          console.log(this.groceryList)
         })
       } else {
-        alert("already in list")
+        alert("update item in list")
       }
     },
     deleteAreaItemFromList(foodName: String){

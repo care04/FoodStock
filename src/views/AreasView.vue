@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {ref, type Ref, computed} from "vue"
+import {ref, type Ref, computed, onBeforeMount} from "vue"
 import { useFoodStore } from "../stores/foodStore"
 import { useRoute } from "vue-router"
 import type { Food } from "../types/FoodStockTypes"
@@ -18,14 +18,14 @@ function save () {
     if (selectedFood.value.need === 0) {
       foodStore.getGroceryList()
       foodStore.deleteAreaItemFromList(selectedFood.value.foodName)
-    }
-  } else {
-    foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
-  }
-  if (+selectedFood.value.need > 0) {
+    } else {
     addToList()
     close()
   }
+  } else {
+    foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
+  }
+  
 }
 function close () {
   selectedFood.value = foodStore.emptyFoodItem as Food
@@ -77,6 +77,9 @@ function create() {
       stock: 0,
     }
 }
+onBeforeMount(() => {
+  foodStore.getGroceryList()
+})
 </script>
 <template>
   <div class="about">
