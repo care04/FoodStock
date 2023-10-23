@@ -115,9 +115,12 @@ export const useFoodStore = defineStore("food", {
     },
     async createGroceryList(selectedFood: Food){
       let checkCopy = ""
-      this.GroceryList.filter((item) => {
+      this.getGroceryList()
+      this.GroceryList.filter(item => {
         if(item.Food[0].value === selectedFood.foodName){
           checkCopy = "don't create"
+        } else {
+          checkCopy = "go ahead"
         }
       })
       if (checkCopy === "go ahead") {
@@ -137,7 +140,7 @@ export const useFoodStore = defineStore("food", {
           }
         })
       } else {
-        console.log("already in list")
+        alert("already in list")
       }
     },
     deleteAreaItemFromList(foodName: String){
