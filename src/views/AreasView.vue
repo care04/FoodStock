@@ -19,11 +19,21 @@ function save () {
       foodStore.getGroceryList()
       foodStore.deleteAreaItemFromList(selectedFood.value.foodName)
     } else {
-    addToList()
-    close()
-  }
+      addToList()
+      close()
+    }
   } else {
-    foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
+    let exsist = false 
+    foodStore.areaFood.filter( item => {
+      if (item.foodName.toUpperCase() === selectedFood.value.foodName.toUpperCase()) {
+        exsist = true
+      }
+    })
+    if (exsist === false ) {
+      foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
+    } else {
+      alert("already created")
+    }
     New = false
   }
   
