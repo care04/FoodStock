@@ -4,6 +4,7 @@ import { useFoodStore } from "../stores/foodStore"
 import { useRoute } from "vue-router"
 import type { Food } from "../types/FoodStockTypes"
 import { storeToRefs } from 'pinia';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 var foodStore = useFoodStore()
 let { currentRoom } = storeToRefs(foodStore)
 var New = false
@@ -98,7 +99,7 @@ onBeforeMount(() => {
     <h3 v-if="foodStore.error != ''">Error: {{ foodStore.error }}</h3>
     <ul>
       <li v-for="fi in foodStore.areaFood" :key="fi.id">
-        <button class="btn" onclick="my_modal_4.showModal()" @click="callModal(fi)">{{ fi.foodName }}</button>
+        <button class="btn" onclick="my_modal_4.showModal()" @click="callModal(fi)">{{ fi.foodName }}</button><button><FontAwesomeIcon icon="fa-solid fa-arrow-right-arrow-left"/></button>
       </li>
     </ul>
     <dialog id="my_modal_4" class="modal">
