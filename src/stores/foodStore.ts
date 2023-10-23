@@ -1,5 +1,5 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
-import type { Food, foodStoragePlace } from '@/types/FoodStockTypes'
+import type { Food, foodStoragePlace, groceryFood } from '@/types/FoodStockTypes'
 import axios from 'axios'
 export const useFoodStore = defineStore("food", {
   state: () => ({
@@ -107,10 +107,11 @@ export const useFoodStore = defineStore("food", {
     async createGroceryList(selectedFood: Food){
       let checkCopy = "go ahead"
       this.getGroceryList()
+      let itemUpdate = {keep: 0, id: 0}
       this.GroceryList.filter(item => {
-        console.log(item.Food[0].value === selectedFood.foodName)
         if(item.Food[0].value === selectedFood.foodName){
           checkCopy = "don't create"
+          itemUpdate = {keep: selectedFood.need, id: item.id}
         }
       })
       if (checkCopy === "go ahead") {
@@ -133,8 +134,23 @@ export const useFoodStore = defineStore("food", {
           console.log(this.groceryList)
         })
       } else {
-        alert("update item in list")
+        this.updateGroceryListItem(itemUpdate.keep, itemUpdate.id)
       }
+    },
+    async updateGroceryListItem(keep: number, id: number) {
+      axios({
+        method: "PATCH",
+        url: "http://baserow.sosensible.net/api/database/rows/table/724/" + id + "/?user_field_names=true",
+        headers: {
+          Authorization: "Token sLoqMh0UfN5O0WHBeOuwGHvlq7vpPK5j",
+          "Content-Type": "application/json"
+        },
+        data: {
+          amount: keep
+        }
+      }).then((response) => {
+        console.log(response)
+      })
     },
     deleteAreaItemFromList(foodName: String){
       this.getGroceryList()
