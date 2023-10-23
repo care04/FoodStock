@@ -24,6 +24,7 @@ function save () {
   }
   } else {
     foodStore.createFood(selectedFood.value, currentRoom.value.id, unitId.value)
+    New = false
   }
   
 }

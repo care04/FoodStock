@@ -88,6 +88,7 @@ export const useFoodStore = defineStore("food", {
         }
       }).then((results) => {
         console.log(results) 
+        this.getFood()
         
       }).catch((error) => {
         this.error = error.message
