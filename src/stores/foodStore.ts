@@ -68,6 +68,9 @@ export const useFoodStore = defineStore("food", {
         }
       }).catch((error) => {
         console.log(error)
+      }).then((response) => {
+          this.createGroceryList(response.data)
+          console.log(response.data.need)
       })
     },
     async createFood(selectedFood: Food, storageId: number, unitId: number) {
@@ -105,16 +108,16 @@ export const useFoodStore = defineStore("food", {
       })
     },
     async createGroceryList(selectedFood: Food){
-      let checkCopy = "go ahead"
+      let alreadyExsist = false
       this.getGroceryList()
-      let itemUpdate = {keep: 0, id: 0}
-      this.GroceryList.filter(item => {
-        if(item.Food[0].value === selectedFood.foodName){
-          checkCopy = "don't create"
-          itemUpdate = {keep: selectedFood.need, id: item.id}
-        }
+      const itemUpdate = {need: 0, id: 0}
+      this.groceryList.filter(item => {
+        if(item.Food[0].value === selectedFood.foodName) {
+          itemUpdate.id = item.id
+          alreadyExsist = true
+      }
       })
-      if (checkCopy === "go ahead") {
+      if (alreadyExsist === false) {
         await axios({
           method: "POST",
           url: "http://baserow.sosensible.net/api/database/rows/table/724/?user_field_names=true",
@@ -131,10 +134,16 @@ export const useFoodStore = defineStore("food", {
           }
         }).then(() => {
           this.getGroceryList()
-          console.log(this.groceryList)
         })
       } else {
-        this.updateGroceryListItem(itemUpdate.keep, itemUpdate.id)
+        await this.getFood()
+        this.food.forEach((item: Food) => {
+          if (item.foodName.toLowerCase() === selectedFood.foodName.toLowerCase()) {
+            itemUpdate.need += +item.need
+          }
+        })
+        console.log(itemUpdate.need)
+        this.updateGroceryListItem(itemUpdate.need, itemUpdate.id)
       }
     },
     async updateGroceryListItem(keep: number, id: number) {
@@ -148,8 +157,6 @@ export const useFoodStore = defineStore("food", {
         data: {
           amount: keep
         }
-      }).then((response) => {
-        console.log(response)
       })
     },
     deleteAreaItemFromList(foodName: String){

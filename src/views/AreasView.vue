@@ -9,20 +9,11 @@ var foodStore = useFoodStore()
 let { currentRoom } = storeToRefs(foodStore)
 var New = false
 var unitId = ref(0)
-function addToList() {
-   foodStore.createGroceryList(selectedFood.value)
-}
 function save () {
   selectedFood.value.need = need.value
   if(New === false) {
     foodStore.updateFood(selectedFood.value, unitId.value)
-    if (selectedFood.value.need === 0) {
-      foodStore.getGroceryList()
-      foodStore.deleteAreaItemFromList(selectedFood.value.foodName)
-    } else {
-      addToList()
-      close()
-    }
+    close()
   } else {
     let exsist = false 
     foodStore.areaFood.filter( item => {
